@@ -47,7 +47,8 @@ def upload_file(s3, file_name, key):
 def download_file(s3, key, file_name):
     try:
         s3.download_file(BUCKET_NAME, key, file_name)
-        print(f"File '{key}' downloaded as '{file_name}' successfully!")
+        print(f"File '{key}' downloaded as '{file_name}' successfully!")source venv/bin/activate
+
     except Exception as e:
         print(f"Error downloading file: {e}")
 
