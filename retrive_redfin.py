@@ -1,6 +1,9 @@
 import time
 import requests
 from bs4 import BeautifulSoup
+from geopy.geocoders import Nominatim
+
+geolocator = Nominatim(user_agent="geoapi")
 
 def get_info(url: str) -> dict:
     info = {}
@@ -15,9 +18,18 @@ def get_info(url: str) -> dict:
                 response.raise_for_status()
                 html_content = response.text
 
+                # RENTAL
                 info["Building Name"] = get_name(html_content)
                 info["Address"] = get_address(html_content)
-                info[""]
+                # info[""]
+
+                # NEIGHBOORHOOD
+                # https://www.areavibes.com/miami-fl/?ll=25.8581+-80.17137&addr=+north+bayshore
+                location = geolocator.geocode(info["Address"])
+                print(location)
+                print(f"latitude {location.latitude}")
+                print(f"longitute {location.longitude}")
+                
 
                 return info
         print("Max retries reached.")
