@@ -19,16 +19,47 @@ def get_info(url: str) -> dict:
                 html_content = response.text
 
                 # RENTAL
-                info["Building Name"] = get_name(html_content)
-                info["Address"] = get_address(html_content)
+                # info["Building Name"] = get_name(html_content)
+                # info["Address"] = get_address(html_content)
+                info["Address"] = "701 5th Ave N,Seattle, WA 98109"
                 # info[""]
 
                 # NEIGHBOORHOOD
                 # https://www.areavibes.com/miami-fl/?ll=25.8581+-80.17137&addr=+north+bayshore
+                #https://www.areavibes.com/seattle-wa/lower+queen+anne/?ll=47.62569+-122.34781&addr=701+5th+avenue+north
+                # https://www.areavibes.com/seattle-wa/downtown/
+                # Geolocation
                 location = geolocator.geocode(info["Address"])
-                print(location)
-                print(f"latitude {location.latitude}")
-                print(f"longitute {location.longitude}")
+                address_components = location.raw.get("address", {})
+                county = address_components.get("county", "County not found")
+                print(county)
+                # print(neighborhood)
+                if location:
+                    split_address = info["Address"].split(",")
+                    print("Full Location:", location.address)
+
+                    # Extract components
+                    addr_url = split_address[0].replace(" ", "+")
+                    city = split_address[1].strip().lower()
+                    state = split_address[2].strip()[:2].lower()
+
+                    # Customizing the neighborhood (e.g., "downtown" or "uptown")
+                    ## TODO MAKE THIS AUTOMATIC
+                    neighborhood = "downtown"  
+                    
+                    lat = location.latitude
+                    lng = location.longitude
+
+                    # Constructing the URL for a specific neighborhood
+                    url2 = f"https://www.areavibes.com/{city}-{state}/{neighborhood}/?ll={lat}+{lng}&addr={addr_url}"
+                    print("Generated AreaVibes URL:", url2)
+
+                    # Optional: Make a request to the constructed URL
+                    response2 = requests.get(url2, headers=headers)
+                    if response2.status_code == 200:
+                        print("Neighborhood data successfully retrieved!")
+                else:
+                    print("Geolocation failed for the address.")
                 
 
                 return info
@@ -55,4 +86,5 @@ def get_address(html_content: str) -> str:
     return element.text.strip() if element else "Address not found"
 
 
-print(get_info("https://www.redfin.com/WA/Seattle/The-LeeAnn/apartment/171922517"))
+# print(get_info("https://www.redfin.com/WA/Seattle/The-LeeAnn/apartment/171922517"))
+print(get_info("https://github.com/yurahriaziev/student-tutor-space/commits/main/"))
