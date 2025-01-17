@@ -1,9 +1,7 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-from geopy.geocoders import Nominatim
-
-geolocator = Nominatim(user_agent="geoapi")
+from retrive_neighboorhood import *
 
 def get_info(url: str) -> dict:
     info = {}
@@ -30,7 +28,7 @@ def get_info(url: str) -> dict:
                 # https://www.areavibes.com/seattle-wa/downtown/
                 # Geolocation
                 url2 = generate_link(info["Address"])
-                
+                print(url2)
 
                 return info
         print("Max retries reached.")
@@ -54,14 +52,6 @@ def get_address(html_content: str) -> str:
     soup = BeautifulSoup(html_content, "html.parser")
     element = soup.find("h2", class_="full-address") 
     return element.text.strip() if element else "Address not found"
-
-def generate_link(address: str) -> str: 
-    location = geolocator.geocode(address)
-    split_address = address.split(",")
-    print("Full Location:", location.address)
-    addr_url = split_address[0].replace(" ", "+")
-    city = split_address[1].strip().lower()
-    state = split_address[2].strip()[:2].lower()
 
 
 
