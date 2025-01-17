@@ -1,7 +1,7 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-from retrive_neighboorhood import *
+from retrive_neighboorhood import get_neighboorhood_info
 
 def get_info(url: str) -> dict:
     info = {}
@@ -23,12 +23,7 @@ def get_info(url: str) -> dict:
                 # info[""]
 
                 # NEIGHBOORHOOD
-                # https://www.areavibes.com/miami-fl/?ll=25.8581+-80.17137&addr=+north+bayshore
-                #https://www.areavibes.com/seattle-wa/lower+queen+anne/?ll=47.62569+-122.34781&addr=701+5th+avenue+north
-                # https://www.areavibes.com/seattle-wa/downtown/
-                # Geolocation
-                url2 = generate_link(info["Address"])
-                print(url2)
+                neighboorhood = get_neighboorhood_info(info["Address"])
 
                 return info
         print("Max retries reached.")
