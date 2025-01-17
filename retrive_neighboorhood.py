@@ -3,30 +3,42 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-
-
 geolocator = Nominatim(user_agent="geoapi")
-
-
-# https://www.areavibes.com/miami-fl/?ll=25.8581+-80.17137&addr=+north+bayshore
-                #https://www.areavibes.com/seattle-wa/lower+queen+anne/?ll=47.62569+-122.34781&addr=701+5th+avenue+north
-                # https://www.areavibes.com/seattle-wa/downtown/
-                # Geolocation
-
-# 701 5th Ave N,Seattle, WA 98109
-
-# https://www.areavibes.com/search-results/?st=wa&ct=seattle&hd=lower+queen+anne&zip=&addr=701+5th+avenue+north&ll=47.62569+-122.34781
-# https://www.areavibes.com/search-results/?st=wa&ct=seattle&hd=lower+queen+anne&zip=&addr=701+5th+avenue+north&ll=47.62569+-122.34781#google_vignette
-# https://www.areavibes.com/search-results/?st=wa&ct=seattle&hd=lower+queen+anne&zip=&addr=701+5th+avenue+north&ll=47.62569+-122.34781
-
-#https://www.areavibes.com/search-results/?st=wa&ct=seattlezip=&addr=701+5th+avenue+north&ll=47.62569+-122.34781
 
 def get_neighboorhood_info(address: str) -> dict:
     neighboorhood = {}
     url = generate_link(address)
-    print(url)
+    
+    if not url:
+        return {
+            "Amenities" : "N/A",
+            "Commute" : "N/A",
+            "Cost Of Living" : "N/A",
+            "Crime" : "N/A",
+            "Employment" : "N/A",
+            "Health" : "N/A",
+            "Housing" : "N/A",
+            "Ratings" : "N/A"
+        }
+    else:
+
+
+
 
 def generate_link(address: str) -> str: 
+    """
+    Generates a neighborhood URL based on a provided address, scrapes the webpage,
+    and retrieves a specific link.
+
+    Args:
+        address (str): Address in the format "Street Address, City, State".
+
+    Returns:
+        str: Final URL for the neighborhood information, or `None` if no relevant link is found.
+
+    Raises:
+        Exception: If geocoding or webpage retrieval fails after retries.
+    """
     location = geolocator.geocode(address)
     split_address = address.split(",")
     print("Full Location:", location.address)
@@ -60,6 +72,6 @@ def generate_link(address: str) -> str:
         return url
     else:
         print("No element found with class 'pri'.")
-        Nothing = "N/A"
+        Nothing = None
         print("NO URL FOR NEIGHBOORHOOD")
         return nothing
