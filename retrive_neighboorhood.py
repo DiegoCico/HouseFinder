@@ -23,7 +23,7 @@ def get_neighboorhood_info(address: str) -> dict:
     else:
 
 
-
+def 
 
 def generate_link(address: str) -> str: 
     """
