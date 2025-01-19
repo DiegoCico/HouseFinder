@@ -21,9 +21,7 @@ def get_neighboorhood_info(address: str) -> dict:
             "Ratings" : "N/A"
         }
     else:
-
-
-def 
+        return url
 
 def generate_link(address: str) -> str: 
     """

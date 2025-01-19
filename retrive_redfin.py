@@ -17,14 +17,17 @@ def get_info(url: str) -> dict:
                 html_content = response.text
 
                 # RENTAL
-                # info["Building Name"] = get_name(html_content)
-                # info["Address"] = get_address(html_content)
-                info["Address"] = "701 5th Ave N,Seattle, WA 98109"
+                info["Building Name"] = get_name(html_content)
+                info["Address"] = get_address(html_content)
+                # info["Address"] = "701 5th Ave N,Seattle, WA 98109"
                 # info[""]
 
                 # NEIGHBOORHOOD
                 neighboorhood = get_neighboorhood_info(info["Address"])
-
+                
+                print("NEIGHBOORHOOD")
+                print(neighboorhood)
+                print("Stats")
                 return info
         print("Max retries reached.")
         return {}
@@ -51,4 +54,5 @@ def get_address(html_content: str) -> str:
 
 
 # print(get_info("https://www.redfin.com/WA/Seattle/The-LeeAnn/apartment/171922517"))
-print(get_info("https://github.com/yurahriaziev/student-tutor-space/commits/main/"))
+# print(get_info("https://github.com/yurahriaziev/student-tutor-space/commits/main/"))
+print(get_info("https://www.redfin.com/WA/Seattle/2nd-and-John/apartment/145726232"))
