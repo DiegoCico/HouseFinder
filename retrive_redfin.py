@@ -20,7 +20,12 @@ def get_info(url_full: str) -> dict:
                 split_url = url_full.split()
                 choice = None
                 if len(split_url) > 1:
-                    choice = " ".join(split_url[2:])
+                    choice = " ".join(split_url[1:])
+                    print(choice)
+                else:
+                    print("No choice")
+
+                print(split_url)
 
                 # RENTAL
                 info["Building Name"] = get_name(html_content)
@@ -64,6 +69,7 @@ def get_room_info(html_content: str, choice: str) -> dict:
         return info  
     
     for floor in element.find_all("div", recursive=False): 
+        print(floor.text)
         name_and_sash = floor.find("div", class_="nameAndSash")  
         details = floor.find("div", class_="details")
         price = floor.find("div", class_="price")
