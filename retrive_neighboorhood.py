@@ -73,3 +73,4 @@ def generate_link(address: str) -> str:
         Nothing = None
         print("NO URL FOR NEIGHBOORHOOD")
         return nothing
+        
