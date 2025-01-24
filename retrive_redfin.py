@@ -59,7 +59,7 @@ def get_info(url_full: str) -> dict:
         print(f"An error occurred: {e}")
         return {}
 
-def get_room_info(url_full: str, choice: str) -> dict:
+# def get_room_info(url_full: str, choice: str) -> dict:
     """
     Extracts room information from a given URL, handling expandable sections and parsing content.
     
@@ -139,7 +139,7 @@ def get_room_info(url_full: str, choice: str) -> dict:
 
     return info
 
-# def get_room_info(html_content: str, choice: str) -> dict:
+def get_room_info(html_content: str, choice: str) -> dict:
     info = {
         "Room Title": "None",
         "Bed/Baths": "None",
