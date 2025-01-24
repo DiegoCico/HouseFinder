@@ -17,6 +17,10 @@ def get_info(url_full: str) -> dict:
                 response.raise_for_status()
                 html_content = response.text
 
+                file_name = "exported_html.txt"
+                with open(file_name, "w", encoding="utf-8") as file:
+                    file.write(html_content)
+
                 split_url = url_full.split()
                 choice = None
                 if len(split_url) > 1:
@@ -59,31 +63,41 @@ def get_room_info(html_content: str, choice: str) -> dict:
         "Availability": "None"
     }
     
-    if choice is None:
+    if not choice:
         return info
     
     soup = BeautifulSoup(html_content, "html.parser")
-    element = soup.find("div", class_="floorPlanInfo")
+    # Adjusted to match the exact class hierarchy
+    elements = soup.find_all("div", class_="floorPlanInfo")
     
-    if not element:
-        return info  
-    
-    for floor in element.find_all("div", recursive=False): 
-        print(floor.text)
-        name_and_sash = floor.find("div", class_="nameAndSash")  
-        details = floor.find("div", class_="details")
-        price = floor.find("div", class_="price")
-        available_count = floor.find("div", class_="availableCount")
-        
-        if not name_and_sash or name_and_sash.text.strip() != choice:
-            continue
-        
-        info["Room Title"] = name_and_sash.text.strip()
-        info["Bed/Baths"] = details.text.split("·")[0].strip() if details else "None"
-        info["Sqft"] = details.text.split("·")[1].strip() if details and "·" in details.text else "None"
+    if not elements:
+        print("No floorPlanInfo elements found.")
+        return info
+
+    for element in elements:
+        # Debug print to confirm element
+        print("FLOOR ELEMENT")
+        print(element)
+
+        name_and_sash = element.find("div", class_="name")
+        details = element.find("div", class_="details")
+        price = element.find("div", class_="price")
+        available_count = element.find("div", class_="availableCount")
+
+        # Check for matching name
+        if name_and_sash:
+            room_name = name_and_sash.text.strip()
+            print(f"Found Room Title: {room_name}")
+            if room_name != choice:
+                continue
+
+        # Populate the info dictionary
+        info["Room Title"] = room_name if name_and_sash else "None"
+        info["Bed/Baths"] = details.text.split("·")[0].strip() if details and "·" in details.text else "None"
+        info["Sqft"] = details.text.split("·")[2].strip().replace("Sqft.", "").strip() if details and "·" in details.text else "None"
         info["Price"] = price.text.strip() if price else "None"
         info["Availability"] = available_count.text.strip() if available_count else "None"
-        break  
+        break  # Exit once we find a matching room
 
     return info
 
@@ -107,4 +121,4 @@ def get_address(html_content: str) -> str:
 
 # print(get_info("https://www.redfin.com/WA/Seattle/The-LeeAnn/apartment/171922517"))
 # print(get_info("https://github.com/yurahriaziev/student-tutor-space/commits/main/"))
-print(get_info("https://www.redfin.com/WA/Seattle/2nd-and-John/apartment/145726232 1x1+D A"))
+print(get_info("https://www.redfin.com/WA/Seattle/2nd-and-John/apartment/145726232 Open 1x1 A"))
