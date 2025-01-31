@@ -22,9 +22,9 @@ def get_info(url_full: str) -> dict:
                 response.raise_for_status()
                 html_content = response.text
 
-                file_name = "exported_html.txt"
-                with open(file_name, "w", encoding="utf-8") as file:
-                    file.write(html_content)
+                # file_name = "exported_html.txt"
+                # with open(file_name, "w", encoding="utf-8") as file:
+                #     file.write(html_content)
 
                 split_url = url_full.split()
                 choice = None

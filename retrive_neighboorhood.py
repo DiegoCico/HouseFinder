@@ -2,6 +2,7 @@ from geopy.geocoders import Nominatim
 import time
 import requests
 from bs4 import BeautifulSoup
+import re
 
 geolocator = Nominatim(user_agent="geoapi")
 
@@ -10,6 +11,7 @@ def get_neighboorhood_info(address: str) -> dict:
     info = get_info(address)
 
     return info
+
 
 def get_info(address: str) -> dict:
     """
@@ -24,7 +26,7 @@ def get_info(address: str) -> dict:
         dict: A dictionary containing detailed neighborhood metrics.
     """
     url = generate_link(address)
-    
+
     info = {
         "Livability": "N/A",
         "Amenities": "N/A",
@@ -57,21 +59,31 @@ def get_info(address: str) -> dict:
         for category in categories:
             category_name = category.find("span")
             grade_element = category.find("i")
-            if category_name and grade_element:
-                category_text = category_name.text.strip().capitalize()
-                grade_text = grade_element.text.strip()
+            if category_name:
+                category_text = category_name.text.strip()
+                grade_text = grade_element.text.strip() if grade_element else "N/A"
                 info[category_text] = grade_text
 
         # Extract subcategories with numbers and grades
         subcategories = soup.find_all("div", class_="widget-indiv-entry")
         for subcategory in subcategories:
-            subcategory_name = subcategory.find("span")
-            grade_element = subcategory.find("i")
-            if subcategory_name and grade_element:
-                subcategory_text = subcategory_name.find("b").text.strip()
-                subcategory_number = subcategory_name.find(text=True, recursive=False).strip()
-                grade_text = grade_element.text.strip()
-                info[subcategory_text] = f"{subcategory_number.strip()} {grade_text}"
+            subcategory_name = subcategory.find("b")
+            if subcategory_name:
+                subcategory_text = subcategory_name.text.strip()
+
+                # Get the number (if available)
+                subcategory_number = subcategory_name.next_sibling
+                if subcategory_number and isinstance(subcategory_number, str):
+                    subcategory_number = re.sub(r"\s+", " ", subcategory_number).strip(" ()")  # Remove excessive spaces and parentheses
+                else:
+                    subcategory_number = "N/A"
+
+                # Get grade (if available)
+                grade_element = subcategory.find("i")
+                grade_text = grade_element.text.strip() if grade_element else "N/A"
+
+                # Store in dictionary
+                info[subcategory_text] = f"({subcategory_number}) {grade_text}".replace("\n", "").strip()
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while fetching data: {e}")
@@ -79,6 +91,7 @@ def get_info(address: str) -> dict:
         print(f"An unexpected error occurred: {e}")
 
     return info
+
 
 def generate_link(address: str) -> str: 
     """
@@ -130,4 +143,6 @@ def generate_link(address: str) -> str:
         Nothing = None
         print("NO URL FOR NEIGHBOORHOOD")
         return nothing
-        
+    
+
+print(get_neighboorhood_info("2nd & John Apartments, 200, 2nd Avenue West, Uptown, Belltown, Seattle, King County, Washington, 98119, United States"))
