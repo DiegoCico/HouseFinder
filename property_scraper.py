@@ -1,5 +1,3 @@
-# property_scraper.py
-
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -43,7 +41,6 @@ class PropertyScraper:
         if not html_content:
             return {}
 
-        # Extract property details
         info["Building Name"] = self._get_name(html_content)
         info["Address"] = self._get_address(html_content)
         room_info = self._get_room_info(html_content)
@@ -88,14 +85,13 @@ class PropertyScraper:
             driver.get(self.url)
             wait = WebDriverWait(driver, 10)
             try:
-                # Try to find and click an expandable element if present.
                 expandable_button = wait.until(
                     EC.presence_of_element_located((By.CLASS_NAME, "ExpandableLink--expanded"))
                 )
                 if expandable_button:
                     print("Found expandable button. Clicking it...")
                     driver.execute_script("arguments[0].click();", expandable_button)
-                    time.sleep(2)  # Allow time for content to load
+                    time.sleep(2) 
             except Exception as e:
                 print("Expandable button not found or not clickable:", e)
             return driver.page_source
@@ -159,7 +155,7 @@ class PropertyScraper:
                     info["Sqft"] = parts[2].strip().replace("Sqft.", "").strip()
             info["Price"] = price.text.strip() if price else "None"
             info["Availability"] = available_count.text.strip() if available_count else "None"
-            break  # Stop after finding the matching room
+            break  
 
         return info
 

@@ -1,5 +1,3 @@
-# neighborhood_scraper.py
-
 import time
 import requests
 import re
@@ -43,7 +41,7 @@ class NeighborhoodScraper:
             f"https://www.areavibes.com/search-results/?st={state}&ct={city}"
             f"zip=&addr={addr_url}&ll={location.latitude}+{location.longitude}"
         )
-        time.sleep(3)  # Wait briefly before requesting
+        time.sleep(3)  
 
         response = None
         for attempt in range(3):
