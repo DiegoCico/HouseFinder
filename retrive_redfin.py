@@ -217,7 +217,9 @@ def get_amenities(html_content: str) -> dict:
         "Parking Type": None,
         "Parking Fee": None,
         "Assigned Parking": None,
-        "EV Parking Fee": None
+        "EV Parking Fee": None,
+        "Lease Term": None,
+        "Application fee": None
     }
 
     pets_blocks = soup.find_all("div", class_="PetsBlock")
@@ -249,6 +251,17 @@ def get_amenities(html_content: str) -> dict:
         ev_parking_fee = parking_block.find("p", class_="comment")
         if ev_parking_fee and "EV Spots Available" in ev_parking_fee.text:
             amenities["EV Parking Fee"] = ev_parking_fee.text.split("for ")[-1]
+
+    lease_term = soup.find("div", class_="LeaseTermBlock")
+    if lease_term:
+        lease_rows = lease_term.find_all("div", class_="table-row")
+        for row in lease_rows:
+            label = row.find("spam", class_="table-label")
+            value = row.find("div", class_="table-value")
+            if label.text.strip() == "Term type":
+                amenities["Lease Term"] = value
+            elif label.text.strip() == "Application fee":
+                amenities["Application fee"] = value
 
     print("All Amendities Received:")
     print(amenities)
