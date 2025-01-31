@@ -256,12 +256,15 @@ def get_amenities(html_content: str) -> dict:
     if lease_term:
         lease_rows = lease_term.find_all("div", class_="table-row")
         for row in lease_rows:
-            label = row.find("spam", class_="table-label")
+            label = row.find("span", class_="table-label")  
             value = row.find("div", class_="table-value")
-            if label.text.strip() == "Term type":
-                amenities["Lease Term"] = value
-            elif label.text.strip() == "Application fee":
-                amenities["Application fee"] = value
+            if label and value:
+                key = label.text.strip()
+                val = value.text.strip()
+                if key == "Term type":
+                    amenities["Lease Term"] = val
+                elif key == "Application fee":
+                    amenities["Application fee"] = val
 
     print("All Amendities Received:")
     print(amenities)
