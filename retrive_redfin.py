@@ -45,13 +45,16 @@ def get_info(url_full: str) -> dict:
                 info["Price"] = room_info["Price"]
                 info["Sqft"] = room_info["Sqft"]
                 info["Availability"] = room_info["Availability"]
+                ammendities = get_amenities(html_content)
+                info.update(ammendities)
 
                 # NEIGHBOORHOOD
                 neighboorhood = get_neighboorhood_info(info["Address"])
+                info.update(neighboorhood)
                 
                 print("NEIGHBOORHOOD")
                 print(neighboorhood)
-                print("Stats")
+                print("FINAL")
                 return info
         print("Max retries reached.")
         return {}
@@ -199,6 +202,57 @@ def get_address(html_content: str) -> str:
     element = soup.find("h2", class_="full-address") 
     return element.text.strip() if element else "Address not found"
 
+def get_amenities(html_content: str) -> dict:
+    """
+    Extracts the amenities of the property from the HTML content.
+    """
+    soup = BeautifulSoup(html_content, "html.parser")
+    print("getting Amendities")
+    
+    amenities = {
+        "Cats Allowed": False,
+        "Dogs Allowed": False,
+        "Cat Rent": None,
+        "Dog Rent": None,
+        "Parking Type": None,
+        "Parking Fee": None,
+        "Assigned Parking": None,
+        "EV Parking Fee": None
+    }
+
+    pets_blocks = soup.find_all("div", class_="PetsBlock")
+    for pet_block in pets_blocks:
+        pet_type = pet_block.find("h3")
+        pet_rent = pet_block.find("div", class_="table-value")
+        
+        if pet_type and "Cats welcome" in pet_type.text:
+            amenities["Cats Allowed"] = True
+            amenities["Cat Rent"] = pet_rent.text if pet_rent else None
+        if pet_type and "Dogs welcome" in pet_type.text:
+            amenities["Dogs Allowed"] = True
+            amenities["Dog Rent"] = pet_rent.text if pet_rent else None
+
+    parking_block = soup.find("div", class_="ParkingTypeBlock")
+    if parking_block:
+        parking_rows = parking_block.find_all("div", class_="table-row")
+        for row in parking_rows:
+            label = row.find("span", class_="table-label")
+            value = row.find("div", class_="table-value")
+            if label and value:
+                if "Type" in label.text:
+                    amenities["Parking Type"] = value.text
+                elif "Parking fee" in label.text:
+                    amenities["Parking Fee"] = value.text
+                elif "Assigned" in label.text:
+                    amenities["Assigned Parking"] = value.text
+
+        ev_parking_fee = parking_block.find("p", class_="comment")
+        if ev_parking_fee and "EV Spots Available" in ev_parking_fee.text:
+            amenities["EV Parking Fee"] = ev_parking_fee.text.split("for ")[-1]
+
+    print("All Amendities Received:")
+    print(amenities)
+    return amenities
 
 
 # print(get_info("https://www.redfin.com/WA/Seattle/The-LeeAnn/apartment/171922517"))
