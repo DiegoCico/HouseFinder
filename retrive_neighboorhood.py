@@ -49,12 +49,10 @@ def get_info(address: str) -> dict:
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # Extract livability score
         livability_score = soup.find("span", class_="cw-score-numerator")
         if livability_score:
             info["Livability"] = f"{livability_score.text.strip()}/100"
 
-        # Extract main categories and their grades
         categories = soup.find_all("div", class_="widget-entry ac")
         for category in categories:
             category_name = category.find("span")
@@ -64,25 +62,20 @@ def get_info(address: str) -> dict:
                 grade_text = grade_element.text.strip() if grade_element else "N/A"
                 info[category_text] = grade_text
 
-        # Extract subcategories with numbers and grades
         subcategories = soup.find_all("div", class_="widget-indiv-entry")
         for subcategory in subcategories:
             subcategory_name = subcategory.find("b")
             if subcategory_name:
                 subcategory_text = subcategory_name.text.strip()
 
-                # Get the number (if available)
                 subcategory_number = subcategory_name.next_sibling
                 if subcategory_number and isinstance(subcategory_number, str):
-                    subcategory_number = re.sub(r"\s+", " ", subcategory_number).strip(" ()")  # Remove excessive spaces and parentheses
+                    subcategory_number = re.sub(r"\s+", " ", subcategory_number).strip(" ()")  
                 else:
                     subcategory_number = "N/A"
 
-                # Get grade (if available)
                 grade_element = subcategory.find("i")
                 grade_text = grade_element.text.strip() if grade_element else "N/A"
-
-                # Store in dictionary
                 info[subcategory_text] = f"({subcategory_number}) {grade_text}".replace("\n", "").strip()
 
     except requests.exceptions.RequestException as e:
