@@ -78,7 +78,8 @@ Below is a visual representation of the scraper’s workflow:
     "Neighborhood": {
         "Livability": "85/100",
         "Commute": "A",
-        "Schools": "A-"
+        "Schools": "A-",
+        ...
     }
 }
 ```
