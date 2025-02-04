@@ -24,8 +24,8 @@ def main():
         },
         "Neighborhood": {
             "Livability": "85/100",
-            "Commute": "Good",
-            "Schools": "Average"
+            "Commute": "A",
+            "Schools": "A-"
         }
     }
     

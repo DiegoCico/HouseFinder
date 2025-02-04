@@ -56,3 +56,29 @@ This repository contains a script that connects to an EC2 instance and runs once
 Below is a visual representation of the scraper’s workflow:
 
 ![Diagram](Diagram.png)
+
+# Apartment Listing Example
+
+```json
+{
+    "Building Name": "The Example Tower",
+    "Address": "123 Example Street, Sample City, ST 00000",
+    "Room Info": {
+        "Room Title": "1x1 Deluxe",
+        "Bed/Baths": "1 Bed / 1 Bath",
+        "Price": "$1200",
+        "Sqft": "750",
+        "Availability": "Now"
+    },
+    "Amenities": {
+        "Cats Allowed": true,
+        "Dogs Allowed": false,
+        "Parking Fee": "$100"
+    },
+    "Neighborhood": {
+        "Livability": "85/100",
+        "Commute": "A",
+        "Schools": "A-"
+    }
+}
+```
