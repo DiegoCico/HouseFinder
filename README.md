@@ -1,8 +1,6 @@
-## UNDER DEVELOPMENT
-### READ ME NEED TO BE RE-DONE
-
 # Real Estate Web Scraper
 
+## Overview
 This repository contains a script that connects to an EC2 instance and runs once a week to scrape real estate data from specified URLs. The extracted data is saved into a CSV file for further analysis.
 
 ## Features
@@ -32,20 +30,29 @@ This repository contains a script that connects to an EC2 instance and runs once
 
 ## Backend Process
 1. **Scraping Data:**
-   - `retrive_redfin.py` extracts property details such as name, address, room configurations, and pricing.
-   - `retrive_neighboorhood.py` retrieves neighborhood information, including livability scores and nearby amenities.
+   - `retrieve_redfin.py` extracts property details such as name, address, room configurations, and pricing.
+   - `retrieve_neighboorhood.py` retrieves neighborhood information, including livability scores and nearby amenities.
 2. **Data Storage & Processing:**
    - Extracted data is compiled and structured into a CSV file.
    - The CSV file is then uploaded to an AWS S3 bucket for storage and further analysis.
 3. **Automation & Scheduling:**
    - The script runs weekly on an EC2 instance via a cron job to ensure updated real estate data is collected.
-   
+
 ## Repository Structure
 - `scraper.py` - Main script for scraping real estate data.
-- `retrive_redfin.py` - Extracts real estate data from Redfin.
-- `retrive_neighboorhood.py` - Fetches neighborhood-related data.
+- `retrieve_redfin.py` - Extracts real estate data from Redfin.
+- `retrieve_neighboorhood.py` - Fetches neighborhood-related data.
 - `S3_manager.py` - Handles AWS S3 operations including uploading and retrieving files.
 - `config.ini` - Configuration file for AWS and script settings.
 - `requirements.txt` - List of dependencies for setting up the environment.
 - `scraper.log` - Log file for debugging and execution tracking.
 - `real_estate_data.csv` - Output CSV file containing scraped data.
+
+## Deployment
+- The script is deployed on an AWS EC2 instance.
+- A cron job schedules weekly execution.
+
+## Diagram
+Below is a visual representation of the scraper’s workflow:
+
+![Diagram](Diagram.png)

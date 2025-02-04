@@ -7,7 +7,7 @@ from neighborhood_scraper import NeighborhoodScraper
 def main():
     # Example URL string: the first token is the property URL,
     # and any tokens after (separated by spaces) indicate a room choice.
-    url_full = "https://www.redfin.com/WA/Seattle/2nd-and-John/apartment/145726232 1x1+D D"
+    url_full = "https://www.redfin.com/WA/Seattle/2nd-and-John/apartment/145726232 1x1+D"
 
     # Initialize the property scraper.
     # Set use_selenium=True if you expect dynamic content that requests cannot fetch.
