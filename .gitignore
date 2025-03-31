@@ -2,3 +2,6 @@
 secrets.config
 
 venv
+
+env/
+.env
